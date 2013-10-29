@@ -1,16 +1,14 @@
 #require 'debugger'
 
 class Piece
-  attr_accessor :color, :pos, :board
+  attr_accessor :pos
+  attr_reader :color
 
   def initialize(pos, board, color)
     @pos, @board, @color = pos, board, color
   end
 
   def moves # returns array of possible moves
-    possible_moves = []
-
-    possible_moves
   end
 
   def move(end_position) # modifies pos and board, maybe
@@ -30,28 +28,20 @@ class Piece
   end
 
   def legal_move?(position)
-    piece = board[position]
-
     return false if position.any? {|coord| !coord.between?(0,7)}
+
+    piece = self.board[position]
+
     return true if piece.nil?
 
-    if piece.color == self.color
-      false
-    else
-      true
-    end
+    (piece.color == self.color) ? true : false
   end
 
-  protected
-    #attr_accessor :color, :pos, :board
-
   private
-    #attr_accessor
-
+  attr_reader :board
 end
 
 class SlidingPiece < Piece
-  attr_reader :pos, :color
   def initialize(pos, board, color, type)
     super(pos, board, color)
 
@@ -67,9 +57,6 @@ class SlidingPiece < Piece
 
   protected
     attr_reader :type
-
-  private
-    attr_accessor :board
 
     def vertical_moves(row, col, inc)
       if !(row).between?(0,7)
@@ -176,8 +163,6 @@ class Knight < SteppingPiece
               [ 2, -1],
               [ 2,  1] ]
 
-  attr_accessor :pos, :color
-
   def initialize(pos, board, color)
     super(pos, board, color, DELTAS)
   end
@@ -196,8 +181,6 @@ class King < SteppingPiece
               [1, -1],
               [1,  0],
               [1, 1] ]
-
-  attr_accessor :pos, :color
 
   def initialize(pos, board, color)
     super(pos, board, color, DELTAS)
@@ -220,7 +203,6 @@ class Rook < SlidingPiece
 end
 
 class Queen < SlidingPiece
-  attr_accessor :color, :pos, :board
 
   def initialize(pos, board, color)
     super(pos, board, color, :both)
@@ -244,7 +226,6 @@ class Bishop < SlidingPiece
 end
 
 class Pawn < Piece
-  attr_accessor :pos, :board, :color
   def initialize(pos, board, color)
     super(pos, board, color)
   end

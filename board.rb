@@ -145,13 +145,13 @@ end
 
 # debugger
 
-#board1 = ChessBoard.new()
+board1 = ChessBoard.new()
 #q = board1[[0,3]]
 #q.move([1,4])
 
 # debugger
-#q = board1[[0,4]]
-#p board1
-#board1.move([0,3],[3,0])
+q = board1 [[0,3]]
+# p board1
+board1.move([0,3],[3,3])
 #p board1.checked?(:black)
-#p board1
+p board1
