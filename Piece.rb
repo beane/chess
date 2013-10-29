@@ -168,6 +168,9 @@ class Knight < SteppingPiece
     super(pos, board, color, DELTAS)
   end
 
+  def to_s
+    "N"
+  end
 end
 
 class King < SteppingPiece
@@ -186,6 +189,54 @@ class King < SteppingPiece
     super(pos, board, color, DELTAS)
   end
 
+  def to_s
+    "K"
+  end
+end
+
+class Rook < SlidingPiece
+
+  def initialize(pos, board, color)
+    super(pos, board, color, :orthorgonal)
+  end
+
+  def to_s
+    "R"
+  end
+end
+
+class Queen < SlidingPiece
+
+  def initialize(pos, board, color)
+    super(pos, board, color, :both)
+  end
+
+  def to_s
+    "Q"
+  end
+end
+
+class Bishop < SlidingPiece
+
+  def initialize(pos, board, color)
+    super(pos, board, color, :diagonal)
+  end
+
+  def to_s
+    "B"
+  end
+
+end
+
+class Pawn < Piece
+
+  def initialize(pos, board, color)
+
+  end
+
+  def to_s
+    "p"
+  end
 end
 
 class Board
@@ -232,15 +283,15 @@ class Board
 end
 
 board1 = Board.new()
-q = SlidingPiece.new([2,7], board1, :white, :both)
+q = SlidingPiece.new([2,7], board1, :black, :both)
 k = Knight.new([4,8], board1, :white)
 k1 = King.new([5,7], board1, :white)
 
 board1.add_piece(k)
-board1.add_piece(q)
+#board1.add_piece(q)
 board1.add_piece(k1)
 
-arr = k.moves
+arr = k1.moves
 p arr
 board1.update!(arr)
 puts board1
