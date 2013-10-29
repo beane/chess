@@ -33,6 +33,8 @@
 # call piece''s move method to determine if end position is valid
 # raise error if end is not valid for that piece
 # move piece
+
+# make sure to have board[] and board[]= methods
 #
 # *** dup: duplicate the board (deep dup?) and pieces
 #
