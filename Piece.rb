@@ -1,6 +1,8 @@
 #require 'debugger'
 
 class Piece
+  attr_accessor :color, :pos, :board
+
   def initialize(pos, board, color)
     @pos, @board, @color = pos, board, color
   end
@@ -13,6 +15,15 @@ class Piece
 
   def move(end_position) # modifies pos and board, maybe
     self.pos = end_position
+    self.board[end_position] = self
+  end
+
+  def dup
+    row = self.pos[0]
+    col = self.pos[1]
+    new_pos = [row, col]
+
+    self.class.new(new_pos, @board, @color)
   end
 
   def to_s
@@ -22,7 +33,7 @@ class Piece
   def legal_move?(position)
     piece = board[position]
 
-    return false if position.any? {|coord| !coord.between?(0,8)}
+    return false if position.any? {|coord| !coord.between?(0,7)}
     return true if piece.nil?
 
     if piece.color == self.color
@@ -33,10 +44,10 @@ class Piece
   end
 
   protected
-    attr_accessor :color
+    #attr_accessor :color, :pos, :board
 
   private
-    attr_accessor :pos, :board
+    #attr_accessor
 
 end
 
@@ -50,9 +61,9 @@ class SlidingPiece < Piece
 
 
   def moves
-    orthogonal_moves if self.type == :orthogonal
-    diagonal_moves if self.type == :diagonal
-    orthogonal_moves + diagonal_moves if self.type == :both
+    return orthogonal_moves if self.type == :orthogonal
+    return diagonal_moves if self.type == :diagonal
+    return orthogonal_moves + diagonal_moves if self.type == :both
   end
 
   protected
@@ -62,7 +73,7 @@ class SlidingPiece < Piece
     attr_accessor :board
 
     def vertical_moves(row, col, inc)
-      if !(row).between?(0,8)
+      if !(row).between?(0,7)
         return []
       elsif [row, col] == self.pos
         vertical_moves(row+inc, col, inc)
@@ -75,7 +86,7 @@ class SlidingPiece < Piece
     end
 
     def horizontal_moves(row, col, inc)
-      if !(col).between?(0,8)
+      if !(col).between?(0,7)
         return []
       elsif [row, col] == self.pos
         horizontal_moves(row, col+inc, inc)
@@ -88,7 +99,7 @@ class SlidingPiece < Piece
     end
 
     def negative_diagonal_moves(row, col, inc)
-      if !(col).between?(0,8) || !(row).between?(0,8)
+      if !(col).between?(0,7) || !(row).between?(0,7)
         return []
       elsif [row, col] == self.pos
         negative_diagonal_moves(row+inc, col+inc, inc)
@@ -101,7 +112,7 @@ class SlidingPiece < Piece
     end
 
     def positive_diagonal_moves(row, col, inc)
-      if !(col).between?(0,8) || !(row).between?(0,8)
+      if !(col).between?(0,7) || !(row).between?(0,7)
         return []
       elsif [row, col] == self.pos
         positive_diagonal_moves(row-inc, col+inc, inc)
@@ -201,7 +212,7 @@ end
 class Rook < SlidingPiece
 
   def initialize(pos, board, color)
-    super(pos, board, color, :orthorgonal)
+    super(pos, board, color, :orthogonal)
   end
 
   def to_s
@@ -210,6 +221,7 @@ class Rook < SlidingPiece
 end
 
 class Queen < SlidingPiece
+  attr_accessor :color, :pos, :board
 
   def initialize(pos, board, color)
     super(pos, board, color, :both)
@@ -233,7 +245,7 @@ class Bishop < SlidingPiece
 end
 
 class Pawn < Piece
-
+  attr_accessor :pos, :board, :color
   def initialize(pos, board, color)
     super(pos, board, color)
   end

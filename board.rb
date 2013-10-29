@@ -1,11 +1,12 @@
 require_relative "piece"
 require 'debugger'
 
-class Board
+class ChessBoard
   attr_accessor :board
+
   def initialize
     @board = (0...8).map { (0...8).map {nil} }
-    @white_piece = setup(:white)
+    @white_pieces = setup(:white)
     @black_pieces = setup(:black)
   end
 
@@ -47,18 +48,59 @@ class Board
     pieces
   end
 
-  def [] (pos)
+  def checked?(color)
+
+    player = @black_pieces
+    other_player = @white_pieces
+
+    if color == :white
+      player = @white_pieces
+      other_player = @black_pieces
+    end
+
+    king_pos = player[0].pos
+
+    temp_board = self.dup
+    other_player.each do |piece|
+      return true if piece.moves.include?(king_pos)
+    end
+
+    false
+  end
+
+  def [](pos)
     row, col = pos
+    return nil unless row.between?(0,7)
     @board[row][col]
   end
 
-  def []= (pos, value)
+  def []=(pos, value)
     row, col = pos
     @board[row][col] = value
   end
 
   def add_piece(piece)
     self[piece.pos] = piece
+  end
+
+  def dup
+    new_board = ChessBoard.new
+
+    board.each_with_index do |row, index|
+
+      new_row = []
+      row.each do |piece|
+        if piece.nil?
+          new_row << piece
+        else
+          new_row << piece.dup
+         end
+      end
+
+      new_board.board[index] = new_row
+    end
+
+    new_board
   end
 
   def update!(positions)
@@ -86,17 +128,11 @@ end
 
 # debugger
 
-board1 = Board.new()
-# q = SlidingPiece.new([2,7], board1, :black, :both)
-# k = Knight.new([4,8], board1, :white)
-# k1 = King.new([5,7], board1, :white)
-#
-# board1.add_piece(k)
-# board1.add_piece(q)
-# board1.add_piece(k1)
-#
-k1 = board1[[0,3]]
-arr = k1.moves
-p arr
-board1.update!(arr)
-puts board1
+board1 = ChessBoard.new()
+#q = board1[[0,3]]
+#q.move([1,4])
+
+# debugger
+
+p board1.checked?(:black)
+
