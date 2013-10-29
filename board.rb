@@ -63,7 +63,6 @@ class ChessBoard
 
     king_pos = player[0].pos
 
-    temp_board = self.dup
     other_player.each do |piece|
       return true if piece.moves.include?(king_pos)
     end
@@ -107,11 +106,7 @@ class ChessBoard
 
       new_row = []
       row.each do |piece|
-        if piece.nil?
-          new_row << piece
-        else
-          new_row << piece.dup
-         end
+        new_row << piece.nil? ? piece : piece.dup
       end
 
       new_board.board[index] = new_row
@@ -127,18 +122,24 @@ class ChessBoard
   end
 
   def to_s
-    str = ""
-    @board.each do |r|
-      r.each do |c|
-        if c.nil?
+    str =  "| | 0 1 2 3 4 5 6 7 |\n"
+    str += "| |-----------------|\n"
+
+    8.times { |num| }
+    @board.each_with_index do |row, index|
+      str += "|#{index}| "
+      row.each do |entry|
+        if entry.nil?
           str += "- "
         else
-          str += c.to_s + " "
+          str += entry.to_s + " "
         end
       end
-      str += "\n"
+
+      str += "|\n"
     end
 
+    str += "| |-----------------|\n"
     str
   end
 end
@@ -150,8 +151,8 @@ board1 = ChessBoard.new()
 #q.move([1,4])
 
 # debugger
-q = board1 [[0,3]]
+#q = board1 [[0,3]]
 # p board1
-board1.move([0,3],[3,3])
+#board1.move([0,3],[3,3])
 #p board1.checked?(:black)
 p board1
