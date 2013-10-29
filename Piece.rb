@@ -1,4 +1,5 @@
-require 'debugger'
+#require 'debugger'
+
 class Piece
   def initialize(pos, board, color)
     @pos, @board, @color = pos, board, color
@@ -31,8 +32,11 @@ class Piece
     end
   end
 
+  protected
+    attr_accessor :color
+
   private
-    attr_accessor :pos, :board, :color
+    attr_accessor :pos, :board
 
 end
 
@@ -231,67 +235,10 @@ end
 class Pawn < Piece
 
   def initialize(pos, board, color)
-
+    super(pos, board, color)
   end
 
   def to_s
     "p"
   end
 end
-
-class Board
-  attr_accessor :board
-  def initialize
-    @board = (0..8).map { (0..8).map {nil} }
-  end
-
-  def [] (pos)
-    row, col = pos
-    @board[row][col]
-  end
-
-  def []= (pos, value)
-    row, col = pos
-    @board[row][col] = value
-  end
-
-  def add_piece(piece)
-    self[piece.pos] = piece
-  end
-
-  def update!(positions)
-    positions.each do |pos|
-      self[pos] = "*"
-    end
-  end
-
-  def to_s
-    str = ""
-    @board.each do |r|
-      r.each do |c|
-        if c.nil?
-          str += "- "
-        else
-          str += c.to_s + " "
-        end
-      end
-      str += "\n"
-    end
-
-    str
-  end
-end
-
-board1 = Board.new()
-q = SlidingPiece.new([2,7], board1, :black, :both)
-k = Knight.new([4,8], board1, :white)
-k1 = King.new([5,7], board1, :white)
-
-board1.add_piece(k)
-#board1.add_piece(q)
-board1.add_piece(k1)
-
-arr = k1.moves
-p arr
-board1.update!(arr)
-puts board1
