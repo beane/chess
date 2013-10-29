@@ -58,7 +58,7 @@ class SlidingPiece < Piece
 
 
     def vertical_moves(row, col, inc)
-      if !(row+inc).between?(0,8)
+      if !(row).between?(0,8)
         return []
       elsif [row, col] == self.pos
         vertical_moves(row+inc, col, inc)
@@ -66,12 +66,12 @@ class SlidingPiece < Piece
         return [] if board[[row,col]].color == self.color
         return [[row,col]] if board[[row,col]] != self.color
       else
-        vertical_moves(row+inc, col, inc) + [[row+inc,col]]
+        vertical_moves(row+inc, col, inc) + [[row,col]]
       end
     end
 
     def horizontal_moves(row, col, inc)
-      if !(col+inc).between?(0,8)
+      if !(col).between?(0,8)
         return []
       elsif [row, col] == self.pos
         horizontal_moves(row, col+inc, inc)
@@ -79,12 +79,12 @@ class SlidingPiece < Piece
         return [] if board[[row,col]].color == self.color
         return [[row,col]] if board[[row,col]] != self.color
       else
-        horizontal_moves(row, col+inc, inc) + [[row,col+inc]]
+        horizontal_moves(row, col+inc, inc) + [[row,col]]
       end
     end
 
     def negative_diagonal_moves(row, col, inc)
-      if !(col+inc).between?(0,8) || !(row+inc).between?(0,8)
+      if !(col).between?(0,8) || !(row).between?(0,8)
         return []
       elsif [row, col] == self.pos
         negative_diagonal_moves(row+inc, col+inc, inc)
@@ -92,12 +92,12 @@ class SlidingPiece < Piece
         return [] if board[[row,col]].color == self.color
         return [[row,col]] if board[[row,col]] != self.color
       else
-        negative_diagonal_moves(row+inc, col+inc, inc) + [[row+inc,col+inc]]
+        negative_diagonal_moves(row+inc, col+inc, inc) + [[row,col]]
       end
     end
 
     def positive_diagonal_moves(row, col, inc)
-      if !(col+inc).between?(0,8) || !(row-inc).between?(0,8)
+      if !(col).between?(0,8) || !(row).between?(0,8)
         return []
       elsif [row, col] == self.pos
         positive_diagonal_moves(row-inc, col+inc, inc)
@@ -105,7 +105,7 @@ class SlidingPiece < Piece
         return [] if board[[row,col]].color == self.color
         return [[row,col]] if board[[row,col]] != self.color
       else
-        positive_diagonal_moves(row-inc, col+inc, inc) + [[row-inc,col+inc]]
+        positive_diagonal_moves(row-inc, col+inc, inc) + [[row,col]]
       end
     end
 
@@ -216,12 +216,12 @@ end
 board1 = Board.new()
 q = SlidingPiece.new([3,7], board1, :white, :both)
 k = Knight.new([4,8], board1, :white)
+k1 = Knight.new([5,7], board1, :white)
 
-# board1.add_piece(k)
+board1.add_piece(k)
 board1.add_piece(q)
-debugger
+board1.add_piece(k1)
+
 arr = q.moves
 board1.update!(arr)
-p arr
 puts board1
-#p a.horizontal_moves(1,2,1)
