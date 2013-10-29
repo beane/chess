@@ -11,8 +11,15 @@ class ChessBoard
 
   def initialize
     @board = (0...8).map { (0...8).map {nil} }
-    @white_pieces = setup(:white)
-    @black_pieces = setup(:black)
+    setup(:white)
+    setup(:black)
+  end
+
+  def get_pieces(color)
+    self.board.flatten.select do |piece|
+      next if piece.nil?
+      piece.color == color
+    end
   end
 
   def setup(color)
@@ -42,30 +49,23 @@ class ChessBoard
     self[[row,7]] = r2
 
     pieces = [k, q, k1, k2, b1, b2, r1, r2]
-
-    8.times do |col|
-      p_row = row+pawn_offset
-      p = Pawn.new([p_row, col], self, color)
-      self[[p_row,col]] = p
-      pieces << p
-    end
+    #
+    # 8.times do |col|
+    #   p_row = row+pawn_offset
+    #   p = Pawn.new([p_row, col], self, color)
+    #   self[[p_row,col]] = p
+    #   pieces << p
+    # end
 
     pieces
   end
 
   def checked?(color)
-    player = @black_pieces
-    other_player = @white_pieces
+    king_pos = get_pieces(color).select { |piece| piece.is_a?(King) }.first.pos
 
-    if color == :white
-      player = @white_pieces
-      other_player = @black_pieces
-    end
-
-    king_pos = player[0].pos
-
-    other_player.each do |piece|
-      return true if piece.moves.include?(king_pos)
+    opposite_color = color == :black ? :white : :black
+    get_pieces(opposite_color).each do |piece|
+      return true if piece.valid_moves.include?(king_pos)
     end
 
     false
@@ -88,16 +88,24 @@ class ChessBoard
 
   def move(start, final)
     raise BadMoveError if self[start].nil?
-    #raise if wrong color
-
-
     piece = self[start]
 
-    #piece>che
-    raise BadMoveError unless piece.moves.include?(final)
-
+    #puts piece.color
+    raise BadMoveError unless piece.valid_moves.include?(final)
 
     raise MoveIntoCheckError if piece.move_into_check?(final)
+
+    self[final] = piece
+    piece.move(final)
+
+    self[start] = nil
+  end
+
+  def move!(start, final)
+    raise BadMoveError if self[start].nil?
+    piece = self[start]
+    raise BadMoveError unless piece.valid_moves.include?(final)
+
 
     self[final] = piece
     piece.move(final)
@@ -112,7 +120,7 @@ class ChessBoard
 
       new_row = []
       row.each do |piece|
-        new_row << piece.nil? ? piece : piece.dup
+        new_row << (piece.nil? ? piece : piece.dup)
       end
 
       new_board.board[index] = new_row
@@ -149,16 +157,13 @@ class ChessBoard
     str
   end
 end
-
-# debugger
-
 board1 = ChessBoard.new()
-#q = board1[[0,3]]
-#q.move([1,4])
-
-# debugger
-#q = board1 [[0,3]]
-# p board1
-#board1.move([0,3],[3,3])
-#p board1.checked?(:black)
 p board1
+debugger
+board1.move([0,3],[1,4])
+p board1
+board1.move([7,3], [6,4])
+board1.move([6,4],[7,3])
+p board1
+# board1.move([6,4], [7,3])
+# p board1

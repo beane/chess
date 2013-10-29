@@ -8,7 +8,7 @@ class Piece
     @pos, @board, @color = pos, board, color
   end
 
-  def moves # returns array of possible moves
+  def valid_moves # returns array of possible moves
   end
 
   def move(end_position) # modifies pos and board, maybe
@@ -17,9 +17,9 @@ class Piece
 
   def move_into_check?(final)
     temp_board = self.board.dup
-    temp_board.move(self.pos, final)
+    temp_board.move!(self.pos, final)
 
-    temp_board.is_checked?(self.color)
+    temp_board.checked?(self.color)
   end
 
   def dup
@@ -44,7 +44,7 @@ class Piece
     (piece.color == self.color) ? true : false
   end
 
-  private
+  protected
   attr_reader :board
 end
 
@@ -56,12 +56,12 @@ class SlidingPiece < Piece
   end
 
 
-  def moves
+  def valid_moves
     result = orthogonal_moves if self.type == :orthogonal
     result = diagonal_moves if self.type == :diagonal
     result = orthogonal_moves + diagonal_moves if self.type == :both
 
-    result.select { |pos| !moves_into_check?(pos) }
+    result
   end
 
   protected
@@ -151,14 +151,14 @@ class SteppingPiece < Piece
     @deltas = deltas
   end
 
-  def moves
+  def valid_moves
     possible_moves = []
     @deltas.each do |d_row, d_col|
       row, col = d_row + pos[0], d_col + pos[1]
       possible_moves << [row, col] if legal_move?([row, col])
     end
 
-    possible_moves.select { |pos| !moves_into_check?(pos) }
+    possible_moves
   end
 end
 
@@ -239,9 +239,9 @@ class Pawn < Piece
     super(pos, board, color)
   end
 
-  def moves
+  def valid_moves
     possible_moves = []
-    possible_moves.select { |pos| !moves_into_check?(pos) }
+    possible_moves
   end
 
   def to_s
