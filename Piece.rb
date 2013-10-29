@@ -15,6 +15,13 @@ class Piece
     self.pos = end_position
   end
 
+  def move_into_check?(final)
+    temp_board = self.board.dup
+    temp_board.move(self.pos, final)
+
+    temp_board.is_checked?(self.color)
+  end
+
   def dup
     row = self.pos[0]
     col = self.pos[1]
@@ -50,9 +57,11 @@ class SlidingPiece < Piece
 
 
   def moves
-    return orthogonal_moves if self.type == :orthogonal
-    return diagonal_moves if self.type == :diagonal
-    return orthogonal_moves + diagonal_moves if self.type == :both
+    result = orthogonal_moves if self.type == :orthogonal
+    result = diagonal_moves if self.type == :diagonal
+    result = orthogonal_moves + diagonal_moves if self.type == :both
+
+    result.select { |pos| !moves_into_check?(pos) }
   end
 
   protected
@@ -149,7 +158,7 @@ class SteppingPiece < Piece
       possible_moves << [row, col] if legal_move?([row, col])
     end
 
-    possible_moves
+    possible_moves.select { |pos| !moves_into_check?(pos) }
   end
 end
 
@@ -228,6 +237,11 @@ end
 class Pawn < Piece
   def initialize(pos, board, color)
     super(pos, board, color)
+  end
+
+  def moves
+    possible_moves = []
+    possible_moves.select { |pos| !moves_into_check?(pos) }
   end
 
   def to_s

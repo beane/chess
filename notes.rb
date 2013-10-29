@@ -1,44 +1,20 @@
-#
-# Piece is the Parent class of all the pieces
-# It takes a board, position, color
-# It has a method "moves" that returns an array of its legal moves
-# It has a "move" method that updates the position of the piece
-# Maybe - This might also update the board class
-#
-# Subclasses of Piece
-# SlidingPiece
-#   initialize accepts direction parameter
-#   Rook < SlidingPiece
-#   Rook.new([x,y],self)
-#
-# SteppingPiece
+# Maybe update recursion on sliding piece moves
+# piece.stuff(prev)
+# return if
+#   piece.up.stuff
+#   piece.down.stuff
+#   piece.left.stuff
+#   piece.right.stuff unless piece.right == self
+# end
 #
 #
-# Board class
-# holds a 2-dimension array
-# values are nil or Piece object
-# hold a Array for all black pieces
-# hold a Array for all white pieces
-#
-# method "checked?(color)"
-# find the king of color
-# check if any of the opponent pieces can move to that square
-#
-# method "move(start, end)"
-# look in its array for start
-# check to see if start is nil?
-# raise error is it is
-# raise error if it's your opponent's piece
-# if not:
-# call piece''s move method to determine if end position is valid
-# raise error if end is not valid for that piece
-# move piece
+# piece.diag(prev)
+#   piece.upleft.diag
+#   piece.downleft.diag
+#   piece.
+# end
 
-# make sure to have board[] and board[]= methods
-#
-# *** dup: duplicate the board (deep dup?) and pieces
-#
-#
+
 # Piece, cont.
 # valid moves: ignore the moves that leave your king in check
 # move_into_check?: duplicate board and make move, the see if king is in check.

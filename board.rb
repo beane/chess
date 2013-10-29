@@ -4,6 +4,8 @@ require 'debugger'
 class ChessBoard
   class BadMoveError < ArgumentError
   end
+  class MoveIntoCheckError < BadMoveError
+  end
 
   attr_accessor :board
 
@@ -52,7 +54,6 @@ class ChessBoard
   end
 
   def checked?(color)
-
     player = @black_pieces
     other_player = @white_pieces
 
@@ -89,9 +90,14 @@ class ChessBoard
     raise BadMoveError if self[start].nil?
     #raise if wrong color
 
+
     piece = self[start]
 
+    #piece>che
     raise BadMoveError unless piece.moves.include?(final)
+
+
+    raise MoveIntoCheckError if piece.move_into_check?(final)
 
     self[final] = piece
     piece.move(final)
