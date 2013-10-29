@@ -21,7 +21,9 @@ class Piece
   def legal_move?(position)
     piece = board[position]
 
+    return false if position.any? {|coord| !coord.between?(0,8)}
     return true if piece.nil?
+
     if piece.color == self.color
       false
     else
@@ -54,8 +56,6 @@ class SlidingPiece < Piece
 
   private
     attr_accessor :board
-
-
 
     def vertical_moves(row, col, inc)
       if !(row).between?(0,8)
@@ -170,6 +170,24 @@ class Knight < SteppingPiece
 
 end
 
+class King < SteppingPiece
+  DELTAS = [  [0, -1],
+              [0,  1],
+              [-1, -1],
+              [-1,  1],
+              [-1,  0],
+              [1, -1],
+              [1,  0],
+              [1, 1] ]
+
+  attr_accessor :pos, :color
+
+  def initialize(pos, board, color)
+    super(pos, board, color, DELTAS)
+  end
+
+end
+
 class Board
   attr_accessor :board
   def initialize
@@ -214,14 +232,15 @@ class Board
 end
 
 board1 = Board.new()
-q = SlidingPiece.new([3,7], board1, :white, :both)
+q = SlidingPiece.new([2,7], board1, :white, :both)
 k = Knight.new([4,8], board1, :white)
-k1 = Knight.new([5,7], board1, :white)
+k1 = King.new([5,7], board1, :white)
 
 board1.add_piece(k)
 board1.add_piece(q)
 board1.add_piece(k1)
 
-arr = q.moves
+arr = k.moves
+p arr
 board1.update!(arr)
 puts board1
