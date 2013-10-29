@@ -1,5 +1,4 @@
 #require 'debugger'
-
 class Piece
   attr_accessor :pos
   attr_reader :color
@@ -16,6 +15,7 @@ class Piece
   end
 
   def move_into_check?(final)
+    debugger
     temp_board = self.board.dup
     temp_board.move!(self.pos, final)
 
@@ -48,6 +48,12 @@ class Piece
   attr_reader :board
 end
 
+class NilPiece # helps the recursive functions later
+  def initialize
+    @pos, @board, @color = nil, nil, nil
+  end
+end
+
 class SlidingPiece < Piece
   def initialize(pos, board, color, type)
     super(pos, board, color)
@@ -68,11 +74,10 @@ class SlidingPiece < Piece
     attr_reader :type
 
     def vertical_moves(row, col, inc)
-      if !(row).between?(0,7)
-        return []
-      elsif [row, col] == self.pos
-        vertical_moves(row+inc, col, inc)
-      elsif board[[row,col]]
+      return [] if !(row).between?(0,7)
+      return vertical_moves(row+inc, col, inc) if [row, col] == self.pos
+
+      if board[[row,col]]
         return [] if board[[row,col]].color == self.color
         return [[row,col]] if board[[row,col]] != self.color
       else
@@ -121,6 +126,8 @@ class SlidingPiece < Piece
 
     def orthogonal_moves()
       row, col = pos
+
+      debugger if self.class == Queen
 
       orthogonal_moves = []
       orthogonal_moves += vertical_moves(row, col, 1)

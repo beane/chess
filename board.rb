@@ -93,6 +93,7 @@ class ChessBoard
     #puts piece.color
     raise BadMoveError unless piece.valid_moves.include?(final)
 
+    debugger
     raise MoveIntoCheckError if piece.move_into_check?(final)
 
     self[final] = piece
@@ -159,11 +160,13 @@ class ChessBoard
 end
 board1 = ChessBoard.new()
 p board1
-debugger
+
 board1.move([0,3],[1,4])
 p board1
+
+debugger
 board1.move([7,3], [6,4])
+
+p board1
 board1.move([6,4],[7,3])
 p board1
-# board1.move([6,4], [7,3])
-# p board1

@@ -1,12 +1,9 @@
 # Maybe update recursion on sliding piece moves
-# piece.stuff(prev)
-# return if
-#   piece.up.stuff
-#   piece.down.stuff
-#   piece.left.stuff
-#   piece.right.stuff unless piece.right == self
-# end
+# piece.up_down(prev)
 #
+#   (board[self.row-1, self.col]).ortho(self)
+#   (right).stuff unless () == self
+# end
 #
 # piece.diag(prev)
 #   piece.upleft.diag
