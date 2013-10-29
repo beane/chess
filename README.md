@@ -1,4 +1,4 @@
-chess
+Chess
 =====
 
-Chess game
+A playable chess game from your terminal!
