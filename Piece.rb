@@ -15,7 +15,6 @@ class Piece
 
   def move(end_position) # modifies pos and board, maybe
     self.pos = end_position
-    self.board[end_position] = self
   end
 
   def dup

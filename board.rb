@@ -2,6 +2,9 @@ require_relative "piece"
 require 'debugger'
 
 class ChessBoard
+  class BadMoveError < ArgumentError
+  end
+
   attr_accessor :board
 
   def initialize
@@ -83,6 +86,20 @@ class ChessBoard
     self[piece.pos] = piece
   end
 
+  def move(start, final)
+    raise BadMoveError if self[start].nil?
+    #raise if wrong color
+
+    piece = self[start]
+
+    raise BadMoveError unless piece.moves.include?(final)
+
+    self[final] = piece
+    piece.move(final)
+
+    self[start] = nil
+  end
+
   def dup
     new_board = ChessBoard.new
 
@@ -128,11 +145,13 @@ end
 
 # debugger
 
-board1 = ChessBoard.new()
+#board1 = ChessBoard.new()
 #q = board1[[0,3]]
 #q.move([1,4])
 
 # debugger
-
-p board1.checked?(:black)
-
+#q = board1[[0,4]]
+#p board1
+#board1.move([0,3],[3,0])
+#p board1.checked?(:black)
+#p board1
