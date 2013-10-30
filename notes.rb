@@ -33,11 +33,6 @@
   # MoveIntoCheck
   # EndPositionError
 
-# Show previous output right before move prompt
-  #
-
-# Don't move a piece that's not yours!
-
 #Hardening code
   # DRY it out
   # split classes into separate files

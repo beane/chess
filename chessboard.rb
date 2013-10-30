@@ -1,4 +1,4 @@
-require_relative "piece"
+require_relative "basic_pieces"
 require_relative "errors"
 
 class ChessBoard
@@ -189,11 +189,4 @@ class ChessBoard
     str += "| |-----------------|\n"
     str
   end
-end
-
-if $PROGRAM_NAME == __FILE__
-  # [f2, f3]
-  # [e7, e5]
-  # [g2, g4]
-  # [d8, h4]
 end
