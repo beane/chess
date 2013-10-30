@@ -294,7 +294,7 @@ class Pawn < Piece
     deltas_to_check << [2 * self.direction, 0] if self.first_move?
 
     deltas_to_check.map do |d_row, d_col|
-      [d_row+self.pos[0], d_col+self.pos[0]]
+      [d_row+self.pos[0], d_col+self.pos[1]]
     end
   end
 
@@ -348,9 +348,9 @@ class Pawn < Piece
   attr_reader :direction
 end
 
-require_relative "board"
-
 if $PROGRAM_NAME == __FILE__
+  # might need to require something
+  # just for testing, anyway
   b = ChessBoard.new
   b.start_game()
 

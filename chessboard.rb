@@ -47,13 +47,13 @@ class ChessBoard
     self[[row,7]] = r2
 
     pieces = [k, q, k1, k2, b1, b2, r1, r2]
-    #
-    # 8.times do |col|
-    #   p_row = row+pawn_offset
-    #   p = Pawn.new([p_row, col], self, color)
-    #   self[[p_row,col]] = p
-    #   pieces << p
-    # end
+
+    8.times do |col|
+      p_row = row+pawn_offset
+      p = Pawn.new([p_row, col], self, color)
+      self[[p_row,col]] = p
+      pieces << p
+    end
 
     pieces
   end
@@ -175,13 +175,13 @@ class ChessBoard
   end
 
   def to_s
-    #str =  "| | A B C D E F G H |\n"
-    str =  "| | 0 1 2 3 4 5 6 7 |\n"
+    str =  "| | A B C D E F G H |\n"
+    #str =  "| | 0 1 2 3 4 5 6 7 |\n"
     str += "| |-----------------|\n"
 
     8.times { |num| }
     @board.each_with_index do |row, index|
-      str += "|#{index}| "
+      str += "|#{index+1}| "
       row.each do |entry|
         if entry.nil?
           str += "- "
@@ -203,6 +203,11 @@ if $PROGRAM_NAME == __FILE__
   board1 = ChessBoard.new()
   board1.start_game()
   p board1
+
+  # [f2, f3]
+  # [e7, e5]
+  # [g2, g4]
+  # [d8, h4]
 
 
   #debugger
