@@ -83,7 +83,6 @@ class ChessBoard
       end
     end
 
-    puts "Checkmate! Game over."
     true
   end
 
@@ -98,8 +97,21 @@ class ChessBoard
       end
     end
 
-    puts "Stalemate! Game over."
+
     true
+  end
+
+  def game_over?(color)
+
+    if checkmate?(color)
+      puts "Checkmate! Game over."
+      return true
+    elsif draw?(color)
+      puts "Stalemate! Game over."
+      return true
+    end
+
+    false
   end
 
   def [](pos)

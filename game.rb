@@ -58,9 +58,7 @@ class Game
   def play_game
     loop do
       begin
-
         game_turn
-
       # ALL OF THESE ERRORS SHOULD COME FROM THE BOARD
       # RAISE MOVE INTO CHECK ERROR
       # rescue []
@@ -78,11 +76,8 @@ class Game
       end
 
       self.change_player
-
-      break if chess_board.checkmate?(current_player.color)
-      break if chess_board.draw?(current_player.color)
+      break if chess_board.game_over?(current_player.color)
     end
-
   end
 
   def to_s
@@ -98,7 +93,7 @@ end
 if $PROGRAM_NAME == __FILE__
   game = Game.new
   game.chess_board.add_piece(King.new([0,7],game.chess_board,:white))
-  game.chess_board.add_piece(Queen.new([2,6],game.chess_board,:black))
+  game.chess_board.add_piece(Queen.new([1,6],game.chess_board,:black))
   game.chess_board.add_piece(King.new([1,5],game.chess_board,:black))
   #game.chess_board.add_piece(Rook.new([1,4],game.chess_board,:white))
   game.play_game
