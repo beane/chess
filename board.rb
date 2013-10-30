@@ -82,6 +82,13 @@ class ChessBoard
     false
   end
 
+  def checkmate?(color)
+    return false unless checked?(color)
+
+    get_pieces(color).all? { |piece| piece.valid_moves.empty? }
+
+  end
+
   def [](pos)
     row, col = pos
     return nil unless row.between?(0,7)
@@ -147,7 +154,7 @@ class ChessBoard
   end
 
   def place!(start, final)
-    raise BadMoveError if self[start].nil?
+     raise BadMoveError if self[start].nil?
     piece = self[start]
 
     self[final] = piece
@@ -168,12 +175,13 @@ class ChessBoard
   end
 
   def to_s
-    str =  "| | A B C D E F G H |\n"
+    #str =  "| | A B C D E F G H |\n"
+    str =  "| | 0 1 2 3 4 5 6 7 |\n"
     str += "| |-----------------|\n"
 
     8.times { |num| }
     @board.each_with_index do |row, index|
-      str += "|#{index+1}| "
+      str += "|#{index}| "
       row.each do |entry|
         if entry.nil?
           str += "- "
@@ -190,23 +198,26 @@ class ChessBoard
   end
 end
 
-board1 = ChessBoard.new()
-board1.start_game()
-p board1
+if $PROGRAM_NAME == __FILE__
+  puts "IN BOARD"
+  board1 = ChessBoard.new()
+  board1.start_game()
+  p board1
 
 
-#debugger
-board1.move([0,3],[1,4])
-p board1
+  #debugger
+  board1.move([0,3],[1,4])
+  p board1
 
-#p board1.show_moves([1,4])
-board1.move([7,3], [6,4])
-#debugger
-p board1
+  #p board1.show_moves([1,4])
+  board1.move([7,3], [6,4])
+  #debugger
+  p board1
 
-board1.place!([7,2],[3,2])
+  board1.place!([7,2],[3,2])
 
-board1.show_moves([3,2])
-p board1
-#board1.move([6,4],[7,3])
-#p board1
+  board1.show_moves([3,2])
+  p board1
+  #board1.move([6,4],[7,3])
+  #p board1
+end

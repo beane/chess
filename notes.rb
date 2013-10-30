@@ -1,7 +1,5 @@
 #Next
-  # use positions like f2, e5, etc. col/row
-    # change columns to letters
-  # pawn movement
+  # pawn movement (check! get it?)
   # determine checkmate
     # 4 move sequence for checkmate
       # [f2, f3]
@@ -14,6 +12,9 @@
 
 
 #User Interaction
+  # use positions like f2, e5, etc. col/row
+  # change columns to letters
+
   # Game class
   # constructs a board
   # alernates between players

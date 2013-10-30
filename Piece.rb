@@ -7,9 +7,6 @@ class Piece
     @pos, @board, @color = pos, board, color
   end
 
-  def valid_moves # returns array of possible moves
-  end
-
   def move(end_position) # modifies pos and board, maybe
     self.pos = end_position
   end
@@ -42,17 +39,11 @@ class Piece
 
     return true if piece.nil?
 
-    (piece.color == self.color) ? true : false
+    (piece.color != self.color) ? true : false
   end
 
   protected
   attr_reader :board
-end
-
-class NilPiece # helps the recursive functions later
-  def initialize
-    @pos, @board, @color = nil, nil, nil
-  end
 end
 
 class SlidingPiece < Piece
@@ -226,7 +217,7 @@ class Knight < SteppingPiece
   end
 
   def to_s
-    "N"
+    self.color == :white ? "N" : 'n'
   end
 end
 
@@ -245,7 +236,7 @@ class King < SteppingPiece
   end
 
   def to_s
-    "K"
+    self.color == :white ? "K" : 'k'
   end
 end
 
@@ -256,7 +247,7 @@ class Rook < SlidingPiece
   end
 
   def to_s
-    "R"
+    self.color == :white ? "R" : 'r'
   end
 end
 
@@ -267,7 +258,7 @@ class Queen < SlidingPiece
   end
 
   def to_s
-    "Q"
+    self.color == :white ? "Q" : 'q'
   end
 end
 
@@ -278,7 +269,7 @@ class Bishop < SlidingPiece
   end
 
   def to_s
-    "B"
+    self.color == :white ? "B" : 'b'
   end
 
 end
@@ -294,7 +285,7 @@ class Pawn < Piece
     @first_move
   end
 
-  def forward_moves
+  def forward_positions
     # trying to return
     deltas_to_check = [
       [self.direction, 0]
@@ -302,22 +293,27 @@ class Pawn < Piece
 
     deltas_to_check << [2 * self.direction, 0] if self.first_move?
 
-    deltas_to_check.map do |pos|
-      row, col = pos
-      [row+self.pos[0], col+self.col[0]]
+    deltas_to_check.map do |d_row, d_col|
+      [d_row+self.pos[0], d_col+self.pos[0]]
     end
   end
 
-  def diag_moves # needs a map with the current pos
-    [[self.direction, 1], [self.direction, -1]]
+  def attack_positions# needs a map with the current pos
+    [[self.direction, 1], [self.direction, -1]].map do |d_row, d_col|
+      [d_row+self.pos[0], d_col+self.pos[1]]
+    end
   end
 
   def moves_ahead
     ahead = []
-    forward_deltas.each do |pos|
-
+    forward_positions.each do |pos|
       piece = self.board[pos]
-      ahead << pos if self.board[pos].nil?
+
+      if self.board[pos].nil?
+        ahead << pos
+      else
+        break
+      end
     end
 
     ahead
@@ -325,7 +321,7 @@ class Pawn < Piece
 
   def moves_diag
     diag = []
-    diag_deltas.each do |pos|
+    attack_positions.each do |pos|
       piece = self.board[pos]
       next if piece.nil?
       diag << pos if piece.color != self.color
@@ -344,10 +340,26 @@ class Pawn < Piece
   end
 
   def to_s
-    "p"
+    self.color == :white ? "P" : "p"
   end
 
   protected
 
   attr_reader :direction
+end
+
+require_relative "board"
+
+if $PROGRAM_NAME == __FILE__
+  b = ChessBoard.new
+  b.start_game()
+
+  # b.place!([7,7],[2,2])
+  # b.place!([0,3], [3,1])
+  pos = [1,1]
+  p = Pawn.new(pos, b, :white)
+  b.add_piece(p)
+
+  b.show_moves(pos)
+  p b[pos].valid_moves
 end
