@@ -15,19 +15,20 @@ class Piece
   end
 
   def move_into_check?(final)
-    debugger
     temp_board = self.board.dup
     temp_board.move!(self.pos, final)
 
     temp_board.checked?(self.color)
   end
 
-  def dup
+  def dup(new_board)
     row = self.pos[0]
     col = self.pos[1]
     new_pos = [row, col]
 
-    self.class.new(new_pos, @board, @color)
+    #WRONG calling @board
+    #self.class.new(new_pos, @board, @color)
+    self.class.new(new_pos, new_board, @color)
   end
 
   def to_s
@@ -127,7 +128,7 @@ class SlidingPiece < Piece
     def orthogonal_moves()
       row, col = pos
 
-      debugger if self.class == Queen
+      #debugger if self.class == Queen
 
       orthogonal_moves = []
       orthogonal_moves += vertical_moves(row, col, 1)

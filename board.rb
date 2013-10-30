@@ -65,6 +65,7 @@ class ChessBoard
 
     opposite_color = color == :black ? :white : :black
     get_pieces(opposite_color).each do |piece|
+      #debugger if piece.is_a?(Queen)
       return true if piece.valid_moves.include?(king_pos)
     end
 
@@ -93,7 +94,7 @@ class ChessBoard
     #puts piece.color
     raise BadMoveError unless piece.valid_moves.include?(final)
 
-    debugger
+    #debugger
     raise MoveIntoCheckError if piece.move_into_check?(final)
 
     self[final] = piece
@@ -117,14 +118,18 @@ class ChessBoard
   def dup
     new_board = ChessBoard.new
 
-    board.each_with_index do |row, index|
-
+    board.each_with_index do |row, index_r|
       new_row = []
-      row.each do |piece|
-        new_row << (piece.nil? ? piece : piece.dup)
+      row.each_with_index do |piece, index_c|
+        if piece.nil?
+          new_row << nil
+        else
+          new_row << piece.class.new([index_r,index_c], new_board, piece.color)
+        end
+        #new_row << (piece.nil? ? piece : piece.dup(new_board))
       end
 
-      new_board.board[index] = new_row
+      new_board.board[index_r] = new_row
     end
 
     new_board
@@ -164,9 +169,9 @@ p board1
 board1.move([0,3],[1,4])
 p board1
 
-debugger
-board1.move([7,3], [6,4])
 
+board1.move([7,3], [6,4])
+#debugger
 p board1
-board1.move([6,4],[7,3])
-p board1
+#board1.move([6,4],[7,3])
+#p board1
