@@ -4,7 +4,12 @@ require 'debugger'
 class ChessBoard
   class BadMoveError < ArgumentError
   end
+
   class MoveIntoCheckError < BadMoveError
+  end
+
+  class StartPositionError < ArgumentError
+
   end
 
   attr_accessor :board
@@ -117,18 +122,18 @@ class ChessBoard
   end
 
   def move(start, final)
-    raise BadMoveError if self[start].nil?
+    raise StartPositionError if self[start].nil?
+    # need to put and handle the following error in game class
+
     piece = self[start]
 
     #puts piece.color
     raise BadMoveError unless piece.valid_moves.include?(final)
 
-    #debugger
     raise MoveIntoCheckError if piece.move_into_check?(final)
 
     self[final] = piece
     piece.move(final)
-    #puts "#{piece} moved to #{final}"
 
     self[start] = nil
   end
