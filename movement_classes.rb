@@ -1,19 +1,8 @@
 require_relative 'piece'
 
 class SlidingPiece < Piece
-  def initialize(pos, board, color, type)
+  def initialize(pos, board, color)
     super(pos, board, color)
-
-    @type = type #Diagonal, orthogonal, both
-  end
-
-
-  def valid_moves
-    result = orthogonal_moves if self.type == :orthogonal
-    result = diagonal_moves if self.type == :diagonal
-    result = orthogonal_moves + diagonal_moves if self.type == :both
-
-    result
   end
 
   protected
@@ -62,15 +51,13 @@ class SlidingPiece < Piece
 end
 
 class SteppingPiece < Piece
-  def initialize(pos, board, color, deltas)
+  def initialize(pos, board, color)
     super(pos, board, color)
-
-    @deltas = deltas
   end
 
   def valid_moves
     possible_moves = []
-    @deltas.each do |d_row, d_col|
+    self.class::DELTAS.each do |d_row, d_col|
       row, col = d_row + pos[0], d_col + pos[1]
       possible_moves << [row, col] if legal_move?([row, col])
     end

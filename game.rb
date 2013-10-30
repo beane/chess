@@ -9,7 +9,7 @@ class Game
     @chess_board = ChessBoard.new
     @white_player = choose_player(:white)
     @black_player = choose_player(:black)
-    @current_player = self.white_player
+    @current_player = self.white_player # [white, black]
     chess_board.start_game
   end
 
@@ -29,10 +29,16 @@ class Game
       puts self.chess_board
 
       start, final = self.current_player.get_move
+      p start
 
       raise WrongPieceError if chess_board[start] && wrong_piece(start)
+
+      raise ShowMoves if final.nil?
     rescue WrongPieceError => e
       puts e.message(current_player.color)
+      retry
+    rescue ShowMoves
+      self.chess_board.show_moves(start)
       retry
     end
 
@@ -55,6 +61,7 @@ class Game
 
       # ALL OF THESE ERRORS SHOULD COME FROM THE BOARD
       # RAISE MOVE INTO CHECK ERROR
+      # rescue []
       rescue MoveIntoCheckError => e
         puts e.message
         retry

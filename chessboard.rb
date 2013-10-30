@@ -1,5 +1,6 @@
 require_relative "basic_pieces"
 require_relative "errors"
+require 'debugger'
 
 class ChessBoard
   attr_accessor :board
@@ -8,7 +9,7 @@ class ChessBoard
     @board = (0...8).map { (0...8).map { nil } }
   end
 
-  def get_pieces(color)
+  def pieces(color)
     self.board.flatten.select do |piece|
       next if piece.nil?
       piece.color == color
@@ -41,16 +42,11 @@ class ChessBoard
     self[[row,0]] = r1
     self[[row,7]] = r2
 
-    pieces = [k, q, k1, k2, b1, b2, r1, r2]
-
     8.times do |col|
       p_row = row + pawn_offset
       p = Pawn.new([p_row, col], self, color)
       self[[p_row,col]] = p
-      pieces << p
     end
-
-    pieces
   end
 
   def show_moves(position)
@@ -63,29 +59,23 @@ class ChessBoard
     end
 
     p temp_board
+    puts "^-- #{self[position].class}'s MOVES --^\n| |-----------------|\n"
   end
 
   def checked?(color)
-    king_pos = get_pieces(color).select { |piece| piece.is_a?(King) }.first.pos
+    king_pos = pieces(color).select { |piece| piece.is_a?(King) }.first.pos
 
     opposite_color = color == :black ? :white : :black
 
-    get_pieces(opposite_color).any? do |piece|
+    pieces(opposite_color).any? do |piece|
       piece.valid_moves.include?(king_pos)
     end
-
-    # get_pieces(opposite_color).each do |piece|
-    #   #debugger if piece.is_a?(Queen)
-    #   return true if piece.valid_moves.include?(king_pos)
-    # end
-    #
-    # false
   end
 
   def checkmate?(color)
     return false unless checked?(color)
 
-    get_pieces(color).each do |piece|
+    pieces(color).each do |piece|
       piece.valid_moves.each do |valid_pos|
         temp_board = self.dup
         temp_board.move!(piece.pos, valid_pos)
@@ -132,7 +122,6 @@ class ChessBoard
   end
 
   def move!(start, final)
-    raise BadMoveError if self[start].nil?
     piece = self[start]
 
     self[final] = piece
@@ -145,7 +134,7 @@ class ChessBoard
   def dup
     new_board = ChessBoard.new
 
-    # (get_pieces(:white) + get_pieces(:black)).each do |piece|
+    # (pieces(:white) + pieces(:black)).each do |piece|
     #   piece.dup(new_board)
     # end
 

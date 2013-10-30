@@ -29,7 +29,7 @@ end
 class EndPositionError < MoveError
   #Piece cannot move to end position
   def message
-
+    "You can't move your piece to that square\nTry again."
   end
 end
 
@@ -38,4 +38,9 @@ class WrongPieceError < MoveError
   def message(color)
     "That's not your piece!\nTry one of your own #{color.to_s.upcase} pieces."
   end
+end
+
+class ShowMoves < MoveError
+
+
 end

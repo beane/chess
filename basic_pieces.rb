@@ -11,7 +11,7 @@ class Knight < SteppingPiece
               [ 2,  1] ]
 
   def initialize(pos, board, color)
-    super(pos, board, color, DELTAS)
+    super(pos, board, color)
   end
 
   def to_s
@@ -30,7 +30,7 @@ class King < SteppingPiece
               [1, 1] ]
 
   def initialize(pos, board, color)
-    super(pos, board, color, DELTAS)
+    super(pos, board, color)
   end
 
   def to_s
@@ -41,7 +41,11 @@ end
 class Rook < SlidingPiece
 
   def initialize(pos, board, color)
-    super(pos, board, color, :orthogonal)
+    super(pos, board, color)
+  end
+
+  def valid_moves
+    orthogonal_moves
   end
 
   def to_s
@@ -52,7 +56,11 @@ end
 class Queen < SlidingPiece
 
   def initialize(pos, board, color)
-    super(pos, board, color, :both)
+    super(pos, board, color)
+  end
+
+  def valid_moves
+    orthogonal_moves + diagonal_moves
   end
 
   def to_s
@@ -63,7 +71,11 @@ end
 class Bishop < SlidingPiece
 
   def initialize(pos, board, color)
-    super(pos, board, color, :diagonal)
+    super(pos, board, color)
+  end
+
+  def valid_moves
+    diagonal_moves
   end
 
   def to_s
@@ -84,19 +96,16 @@ class Pawn < Piece
   end
 
   def forward_positions
-    # trying to return
-    deltas_to_check = [
-      [self.direction, 0]
-    ]
+    deltas_to_check = [[self.direction, 0]]
 
     deltas_to_check << [2 * self.direction, 0] if self.first_move?
 
     deltas_to_check.map do |d_row, d_col|
-      [d_row+self.pos[0], d_col+self.pos[1]]
+      [d_row + self.pos[0], d_col + self.pos[1]]
     end
   end
 
-  def attack_positions# needs a map with the current pos
+  def attack_positions
     [[self.direction, 1], [self.direction, -1]].map do |d_row, d_col|
       [d_row+self.pos[0], d_col+self.pos[1]]
     end
@@ -105,13 +114,13 @@ class Pawn < Piece
   def moves_ahead
     ahead = []
     forward_positions.each do |pos|
-      piece = self.board[pos]
 
-      if self.board[pos].nil?
-        ahead << pos
-      else
-        break
-      end
+      self.board[pos].nil? ? ahead << pos : break
+      # if self.board[pos].nil?
+      #   ahead << pos
+      # else
+      #   break
+      # end
     end
 
     ahead

@@ -2,6 +2,9 @@ class Piece
   attr_accessor :pos
   attr_reader :color
 
+  ORTHOGONAL_DELTAS = [[]]
+
+
   def initialize(pos, board, color)
     @pos, @board, @color = pos, board, color
   end

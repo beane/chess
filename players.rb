@@ -27,7 +27,7 @@ class HumanPlayer < Player
       row = position[0]
     end
 
-    raise InvalidPositionError unless ("a".."g") === col_letter
+    raise InvalidPositionError unless ("a".."h") === col_letter
 
     col = COLUMNS[col_letter]
     row = row.to_i-1 # Integer(row) can throw an error that we can rescue
@@ -42,15 +42,15 @@ class HumanPlayer < Player
       printf "Type in your move, #{self.color} (start,end): "
       str_input = gets.downcase.chomp.split(",")
 
-      raise InvalidPositionError if str_input.size != 2
       row1, col1 = str_input[0].split('')
+
+      return [format_position([row1, col1])] if str_input.size == 1
+      raise InvalidPositionError unless str_input.size == 2
+
       row2, col2 = str_input[1].split('')
 
-      #raise error if str_input is not 2 digits
       start = format_position([row1, col1])
       final = format_position([row2, col2])
-
-      #raise WrongPieceError if chess_board[start] && wrong_piece(start)
 
       system("clear") # might want move around (passing stuff to errors?)
 
