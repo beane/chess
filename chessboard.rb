@@ -118,6 +118,11 @@ class ChessBoard
     self[final] = piece
     piece.move(final)
 
+    # if piece is king?
+    #   if piece is (kingside) castling?
+    #       (castling info is the king piece's responsibility)
+    #   move the correct rook
+
     self[start] = nil
   end
 

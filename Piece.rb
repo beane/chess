@@ -25,8 +25,6 @@ class Piece
     col = self.pos[1]
     new_pos = [row, col]
 
-    #WRONG calling @board
-    #self.class.new(new_pos, @board, @color)
     self.class.new(new_pos, new_board, @color)
   end
 
