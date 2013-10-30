@@ -29,11 +29,12 @@ class Game
       puts self.chess_board
 
       start, final = self.current_player.get_move
-      p start
 
       raise WrongPieceError if chess_board[start] && wrong_piece(start)
 
       raise ShowMoves if final.nil?
+
+
     rescue WrongPieceError => e
       puts e.message(current_player.color)
       retry
@@ -62,6 +63,8 @@ class Game
       # ALL OF THESE ERRORS SHOULD COME FROM THE BOARD
       # RAISE MOVE INTO CHECK ERROR
       # rescue []
+      rescue QuitGame
+        return
       rescue MoveIntoCheckError => e
         puts e.message
         retry
@@ -93,5 +96,11 @@ end
 
 if $PROGRAM_NAME == __FILE__
   game = Game.new
+  #game.chess_board.add_piece(King.new([7,4],game.chess_board,:black))
+  #game.chess_board.add_piece(Rook.new([7,7],game.chess_board,:black))
+  #game.chess_board.add_piece(King.new([0,4],game.chess_board,:white))
+  #game.chess_board.add_piece(Rook.new([1,4],game.chess_board,:white))
   game.play_game
+
+
 end

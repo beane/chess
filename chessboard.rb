@@ -59,7 +59,7 @@ class ChessBoard
     end
 
     p temp_board
-    puts "^-- #{self[position].class}'s MOVES --^\n| |-----------------|\n"
+    puts " ^-- #{self[position].class}'s MOVES --^\n\n\n| |-----------------|\n"
   end
 
   def checked?(color)
@@ -121,7 +121,7 @@ class ChessBoard
     # if piece is king?
     #   if piece is (kingside) castling?
     #       (castling info is the king piece's responsibility)
-    #   move the correct rook
+    #   move the correct rook (Rook#castle)
 
     self[start] = nil
   end

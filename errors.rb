@@ -44,3 +44,7 @@ class ShowMoves < MoveError
 
 
 end
+
+class QuitGame < StandardError
+
+end

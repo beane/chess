@@ -59,12 +59,12 @@ class King < SteppingPiece
       if castling_position(:king) == pos
         row, col = self.pos[0], 5
         rook_pos = rook(:king).pos
-        self.board.move(rook_pos, [row, col)
+        self.board.move!(rook_pos, [row, col])
 
       elsif castling_position(:queen) == pos
         row, col = self.pos[0], 3
         rook_pos = rook(:queen).pos
-        self.board.move(rook_pos, [row, col)
+        self.board.move!(rook_pos, [row, col])
       end
     end
 
@@ -108,7 +108,8 @@ class King < SteppingPiece
     self.color == :white ? "K" : 'k'
   end
 
-  protected :first_move
+  protected
+  attr_accessor :first_move
 end
 
 class Rook < SlidingPiece

@@ -44,6 +44,7 @@ class HumanPlayer < Player
 
       row1, col1 = str_input[0].split('')
 
+      raise QuitGame if str_input[0] == "q"
       return [format_position([row1, col1])] if str_input.size == 1
       raise InvalidPositionError unless str_input.size == 2
 
