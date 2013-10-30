@@ -88,8 +88,18 @@ class ChessBoard
   end
 
   def draw?(color)
-    #In progress...
-    false
+    return false if checked?(color)
+
+    pieces(color).each do |piece|
+      piece.valid_moves.each do |valid_pos|
+        temp_board = self.dup
+        temp_board.move!(piece.pos, valid_pos)
+        return false unless temp_board.checked?(color)
+      end
+    end
+
+    puts "Stalemate! Game over."
+    true
   end
 
   def [](pos)

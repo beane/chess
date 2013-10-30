@@ -35,7 +35,7 @@ class King < SteppingPiece
   end
 
   def rook(side) # returns the rook on the specified side of the king
-    row = pos[0]
+    row = (color == :white ? 0: 7)
 
     if side == :queen
       self.board[[row,0]]
@@ -45,7 +45,7 @@ class King < SteppingPiece
   end
 
   def castling_position(side)
-    row = pos[0]
+    row = (color == :white ? 0: 7)
     col = (side == :king ? 6 : 2)
 
     [row, col]

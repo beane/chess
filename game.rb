@@ -10,7 +10,7 @@ class Game
     @white_player = choose_player(:white)
     @black_player = choose_player(:black)
     @current_player = self.white_player # [white, black]
-    chess_board.start_game
+    #chess_board.start_game
   end
 
   def choose_player(color)
@@ -58,6 +58,7 @@ class Game
   def play_game
     loop do
       begin
+
         game_turn
 
       # ALL OF THESE ERRORS SHOULD COME FROM THE BOARD
@@ -96,9 +97,9 @@ end
 
 if $PROGRAM_NAME == __FILE__
   game = Game.new
-  #game.chess_board.add_piece(King.new([7,4],game.chess_board,:black))
-  #game.chess_board.add_piece(Rook.new([7,7],game.chess_board,:black))
-  #game.chess_board.add_piece(King.new([0,4],game.chess_board,:white))
+  game.chess_board.add_piece(King.new([0,7],game.chess_board,:white))
+  game.chess_board.add_piece(Queen.new([2,6],game.chess_board,:black))
+  game.chess_board.add_piece(King.new([1,5],game.chess_board,:black))
   #game.chess_board.add_piece(Rook.new([1,4],game.chess_board,:white))
   game.play_game
 
