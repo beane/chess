@@ -24,12 +24,12 @@ class SlidingPiece < Piece
       next_position = [row+row_offset, col+col_offset]
 
       return find_neighbors(row_offset, col_offset, next_position) if position == self.pos
-      return [] if !(col).between?(0,7)
-      return [] if !(row).between?(0,7)
+      return [] unless (col).between?(0,7)
+      return [] unless (row).between?(0,7)
 
       if board[position]
         return [] if board[position].color == self.color
-        return [position] if board[position].color != self.color
+        return [position] unless board[position].color == self.color
       end
 
       [position] + find_neighbors(row_offset, col_offset, next_position)

@@ -5,7 +5,7 @@ class ChessBoard
   attr_accessor :board
 
   def initialize
-    @board = (0...8).map { (0...8).map {nil} }
+    @board = (0...8).map { (0...8).map { nil } }
   end
 
   def get_pieces(color)
@@ -44,7 +44,7 @@ class ChessBoard
     pieces = [k, q, k1, k2, b1, b2, r1, r2]
 
     8.times do |col|
-      p_row = row+pawn_offset
+      p_row = row + pawn_offset
       p = Pawn.new([p_row, col], self, color)
       self[[p_row,col]] = p
       pieces << p
@@ -69,12 +69,17 @@ class ChessBoard
     king_pos = get_pieces(color).select { |piece| piece.is_a?(King) }.first.pos
 
     opposite_color = color == :black ? :white : :black
-    get_pieces(opposite_color).each do |piece|
-      #debugger if piece.is_a?(Queen)
-      return true if piece.valid_moves.include?(king_pos)
+
+    get_pieces(opposite_color).any? do |piece|
+      piece.valid_moves.include?(king_pos)
     end
 
-    false
+    # get_pieces(opposite_color).each do |piece|
+    #   #debugger if piece.is_a?(Queen)
+    #   return true if piece.valid_moves.include?(king_pos)
+    # end
+    #
+    # false
   end
 
   def checkmate?(color)
@@ -140,6 +145,10 @@ class ChessBoard
   def dup
     new_board = ChessBoard.new
 
+    # (get_pieces(:white) + get_pieces(:black)).each do |piece|
+    #   piece.dup(new_board)
+    # end
+
     board.each_with_index do |row, index_r|
       new_row = []
       row.each_with_index do |piece, index_c|
@@ -162,7 +171,7 @@ class ChessBoard
     end
   end
 
-  def start_game()
+  def start_game
     setup(:white)
     setup(:black)
   end
