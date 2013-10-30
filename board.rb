@@ -11,8 +11,6 @@ class ChessBoard
 
   def initialize
     @board = (0...8).map { (0...8).map {nil} }
-    setup(:white)
-    setup(:black)
   end
 
   def get_pieces(color)
@@ -111,6 +109,7 @@ class ChessBoard
 
     self[final] = piece
     piece.move(final)
+    #puts "#{piece} moved to #{final}"
 
     self[start] = nil
   end
@@ -124,6 +123,7 @@ class ChessBoard
     self[final] = piece
     piece.move(final)
 
+    #puts "#{piece} moved to #{final}"
     self[start] = nil
   end
 
@@ -138,7 +138,6 @@ class ChessBoard
         else
           new_row << piece.class.new([index_r,index_c], new_board, piece.color)
         end
-        #new_row << (piece.nil? ? piece : piece.dup(new_board))
       end
 
       new_board.board[index_r] = new_row
@@ -163,13 +162,18 @@ class ChessBoard
     end
   end
 
+  def start_game()
+    setup(:white)
+    setup(:black)
+  end
+
   def to_s
-    str =  "| | 0 1 2 3 4 5 6 7 |\n"
+    str =  "| | A B C D E F G H |\n"
     str += "| |-----------------|\n"
 
     8.times { |num| }
     @board.each_with_index do |row, index|
-      str += "|#{index}| "
+      str += "|#{index+1}| "
       row.each do |entry|
         if entry.nil?
           str += "- "
@@ -185,7 +189,9 @@ class ChessBoard
     str
   end
 end
+
 board1 = ChessBoard.new()
+board1.start_game()
 p board1
 
 

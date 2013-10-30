@@ -74,23 +74,6 @@ class SlidingPiece < Piece
   protected
     attr_reader :type
 
-    def find_neighbors(row_offset, col_offset, position)
-      row, col = position[0], position[1]
-      next_position = [row+row_offset, col+col_offset]
-
-      return find_neighbors(row_offset, col_offset, next_position) if position == pos
-      return [] if !(col).between?(0,7)
-      return [] if !(row).between?(0,7)
-
-      if board[position]
-        return [] if board[position].color == self.color
-        return [position] if board[position].color != self.color
-      end
-
-      [position] + find_neighbors(row_offset, col_offset, next_position)
-
-    end
-
     # def vertical_moves(row, col, inc)
     #   return [] if !(row).between?(0,7)
     #   return vertical_moves(row+inc, col, inc) if [row, col] == self.pos
@@ -168,23 +151,32 @@ class SlidingPiece < Piece
     #   diagonal_moves
     # end
 
+    def find_neighbors(row_offset, col_offset, position)
+      row, col = position[0], position[1]
+      next_position = [row+row_offset, col+col_offset]
+
+      return find_neighbors(row_offset, col_offset, next_position) if position == self.pos
+      return [] if !(col).between?(0,7)
+      return [] if !(row).between?(0,7)
+
+      if board[position]
+        return [] if board[position].color == self.color
+        return [position] if board[position].color != self.color
+      end
+
+      [position] + find_neighbors(row_offset, col_offset, next_position)
+    end
+
     def orthogonal_moves()
       row, col = pos
 
-      #debugger if self.class == Queen
-
       orthogonal_moves = []
-      puts "H ->"
-      orthogonal_moves += find_neighbors(0, 1, pos) #horizontal
-      puts "H <-"
-      orthogonal_moves += find_neighbors(0, -1, pos) #horizontal
-      puts "V down"
-      orthogonal_moves += find_neighbors(1, 0, pos) #vertical
-      puts "v up"
-      orthogonal_moves += find_neighbors(-1, 0, pos) #vertical
-      puts "----------------"
+      orthogonal_moves += find_neighbors(0, 1, pos) #right
+      orthogonal_moves += find_neighbors(0, -1, pos) #left
 
-      orthogonal_moves.delete(pos)
+      orthogonal_moves += find_neighbors(1, 0, pos) #down
+      orthogonal_moves += find_neighbors(-1, 0, pos) #up
+
       orthogonal_moves
     end
 
@@ -192,15 +184,13 @@ class SlidingPiece < Piece
       row, col = pos
 
       diagonal_moves = []
-      diagonal_moves += find_neighbors(1, 1, pos) #neg diagonal
-      diagonal_moves += find_neighbors(-1, -1, pos) #pos diagonal
-      diagonal_moves += find_neighbors(1, -1, pos) #neg diagonal
-      diagonal_moves += find_neighbors(-1, 1, pos) #pos diagonal
+      diagonal_moves += find_neighbors(1, 1, pos) #bot-right
+      diagonal_moves += find_neighbors(-1, -1, pos) #top-left
+      diagonal_moves += find_neighbors(1, -1, pos) #top-right
+      diagonal_moves += find_neighbors(-1, 1, pos) #bot-left
 
       diagonal_moves
     end
-
-
 end
 
 class SteppingPiece < Piece
@@ -296,14 +286,68 @@ end
 class Pawn < Piece
   def initialize(pos, board, color)
     super(pos, board, color)
+    @first_move = true
+    @direction = (self.color == :white ? 1 : -1)
+  end
+
+  def first_move?
+    @first_move
+  end
+
+  def forward_moves
+    # trying to return
+    deltas_to_check = [
+      [self.direction, 0]
+    ]
+
+    deltas_to_check << [2 * self.direction, 0] if self.first_move?
+
+    deltas_to_check.map do |pos|
+      row, col = pos
+      [row+self.pos[0], col+self.col[0]]
+    end
+  end
+
+  def diag_moves # needs a map with the current pos
+    [[self.direction, 1], [self.direction, -1]]
+  end
+
+  def moves_ahead
+    ahead = []
+    forward_deltas.each do |pos|
+
+      piece = self.board[pos]
+      ahead << pos if self.board[pos].nil?
+    end
+
+    ahead
+  end
+
+  def moves_diag
+    diag = []
+    diag_deltas.each do |pos|
+      piece = self.board[pos]
+      next if piece.nil?
+      diag << pos if piece.color != self.color
+    end
+
+    diag
   end
 
   def valid_moves
-    possible_moves = []
-    possible_moves
+    moves_ahead + moves_diag
+  end
+
+  def move(end_position)
+    super(end_position)
+    @first_move = false
   end
 
   def to_s
     "p"
   end
+
+  protected
+
+  attr_reader :direction
 end
