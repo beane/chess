@@ -57,6 +57,14 @@ class Game
   end
 
   def play_game
+
+    loop do
+      game_turn
+      self.current_player = (current_player == :white ? :black : :white)
+      break if chess_board.checkmate?(current_player)
+      break if chess_board.draw?(current_player)
+    end
+
   end
 
   def to_s
@@ -71,6 +79,7 @@ end
 
 if $PROGRAM_NAME == __FILE__
   game = Game.new
-  game.game_turn
+  game.play_game
+  #game.game_turn
   p game
 end

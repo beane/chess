@@ -85,8 +85,20 @@ class ChessBoard
   def checkmate?(color)
     return false unless checked?(color)
 
-    get_pieces(color).all? { |piece| piece.valid_moves.empty? }
+    get_pieces(color).each do |piece|
+      piece.valid_moves.each do |valid_pos|
+        temp_board = self.dup
+        temp_board.move!(piece.pos, valid_pos)
+        return false unless temp_board.checked?(color)
+      end
+    end
 
+    true
+  end
+
+  def draw?(color)
+    #In progress...
+    false
   end
 
   def [](pos)
@@ -124,8 +136,6 @@ class ChessBoard
   def move!(start, final)
     raise BadMoveError if self[start].nil?
     piece = self[start]
-    raise BadMoveError unless piece.valid_moves.include?(final)
-
 
     self[final] = piece
     piece.move(final)
@@ -151,16 +161,6 @@ class ChessBoard
     end
 
     new_board
-  end
-
-  def place!(start, final)
-     raise BadMoveError if self[start].nil?
-    piece = self[start]
-
-    self[final] = piece
-    piece.move(final)
-
-    self[start] = nil
   end
 
   def update!(positions)
