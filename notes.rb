@@ -27,6 +27,17 @@
   # ComputerPlayer class
   # make sure this can be cleanly inserted for later
 
+#Error handling
+  # InvalidPositionError - Move is off the board
+  # StartPositionError - Move tries to move a nil piece
+  # MoveIntoCheck
+  # EndPositionError
+
+# Show previous output right before move prompt
+  #
+
+# Don't move a piece that's not yours!
+
 #Hardening code
   # DRY it out
   # split classes into separate files
@@ -40,4 +51,3 @@
   # castling
   # draws
   # pawn promotion
-

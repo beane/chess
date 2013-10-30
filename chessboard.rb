@@ -1,17 +1,7 @@
 require_relative "piece"
-require 'debugger'
+require_relative "errors"
 
 class ChessBoard
-  class BadMoveError < ArgumentError
-  end
-
-  class MoveIntoCheckError < BadMoveError
-  end
-
-  class StartPositionError < ArgumentError
-
-  end
-
   attr_accessor :board
 
   def initialize
@@ -98,6 +88,7 @@ class ChessBoard
       end
     end
 
+    puts "Checkmate! Game over."
     true
   end
 
@@ -123,13 +114,10 @@ class ChessBoard
 
   def move(start, final)
     raise StartPositionError if self[start].nil?
-    # need to put and handle the following error in game class
 
     piece = self[start]
 
-    #puts piece.color
-    raise BadMoveError unless piece.valid_moves.include?(final)
-
+    raise EndPositionError unless piece.valid_moves.include?(final)
     raise MoveIntoCheckError if piece.move_into_check?(final)
 
     self[final] = piece
@@ -204,30 +192,8 @@ class ChessBoard
 end
 
 if $PROGRAM_NAME == __FILE__
-  puts "IN BOARD"
-  board1 = ChessBoard.new()
-  board1.start_game()
-  p board1
-
   # [f2, f3]
   # [e7, e5]
   # [g2, g4]
   # [d8, h4]
-
-
-  #debugger
-  board1.move([0,3],[1,4])
-  p board1
-
-  #p board1.show_moves([1,4])
-  board1.move([7,3], [6,4])
-  #debugger
-  p board1
-
-  board1.place!([7,2],[3,2])
-
-  board1.show_moves([3,2])
-  p board1
-  #board1.move([6,4],[7,3])
-  #p board1
 end

@@ -1,9 +1,7 @@
 require_relative "chessboard"
-
+require_relative "errors"
+require 'debugger'
 class Game
-  class BadMoveError < ArgumentError
-  end
-
   COLUMNS = { "a" => 0,
               "b" => 1,
               "c" => 2,
@@ -32,33 +30,49 @@ class Game
       row = position[0]
     end
 
-    raise ChessBoard::BadMoveError unless ("a".."g") === col_letter
+    raise InvalidPositionError unless ("a".."g") === col_letter
 
     col = COLUMNS[col_letter]
     row = row.to_i-1 # Integer(row) can throw an error that we can rescue
-    raise ChessBoard::BadMoveError unless (0...8) === row
+
+    raise InvalidPositionError unless (0...8) === row
 
     [row, col]
   end
 
+  def wrong_piece(position)
+    chess_board[position].color != current_player
+  end
+
   def prompt_user
     begin
-      puts "Type in your move, #{self.current_player}"
+      printf "Type in your move, #{self.current_player} (start,end): "
       str_input = gets.downcase.chomp.split(",")
+      raise InvalidPositionError if str_input.size != 2
       row1, col1 = str_input[0].split('')
       row2, col2 = str_input[1].split('')
 
       #raise error if str_input is not 2 digits
       start = format_position([row1, col1])
       final = format_position([row2, col2])
+
+      raise WrongPieceError if chess_board[start] && wrong_piece(start)
+
+      system("clear") # might want move around (passing stuff to errors?)
+
       [start, final]
-    rescue ChessBoard::BadMoveError
-      puts "One of those positions is invalid."
+    rescue InvalidPositionError => e
+      p e.message()
+      retry
+    rescue WrongPieceError => e
+      p e.message(current_player)
       retry
     end
   end
 
   def game_turn
+    puts "CHECKED!" if self.chess_board.checked?(current_player)
+
     puts self.chess_board
     start, final = prompt_user
 
@@ -70,15 +84,17 @@ class Game
     loop do
       begin
         game_turn
-      rescue ChessBoard::MoveIntoCheckError
-        puts "That puts you in check! Try again!"
+
+      # ALL OF THESE ERRORS SHOULD COME FROM THE BOARD
+      # RAISE MOVE INTO CHECK ERROR
+      rescue MoveIntoCheckError => e
+        p e.message
         retry
-      rescue ChessBoard::BadMoveError
-        puts "There's no piece there. Try again!"
+      rescue EndPositionError => e
+        p e.message
         retry
-      rescue ChessBoard::StartPositionError
-        puts "There's no piece in the first position!"
-        puts "Try again!"
+      rescue StartPositionError => e
+        p e.message
         retry
       end
 
@@ -100,9 +116,7 @@ class Game
 end
 
 if $PROGRAM_NAME == __FILE__
-  #debugger
+  # debugger
   game = Game.new
   game.play_game
-  #game.game_turn
-  p game
 end
