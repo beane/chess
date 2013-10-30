@@ -60,6 +60,18 @@ class ChessBoard
     pieces
   end
 
+  def show_moves(position)
+    possible_moves = self[position].valid_moves
+
+    temp_board = self.dup
+
+    possible_moves.each do |pos|
+      temp_board[pos] = "*"
+    end
+
+    p temp_board
+  end
+
   def checked?(color)
     king_pos = get_pieces(color).select { |piece| piece.is_a?(King) }.first.pos
 
@@ -135,6 +147,16 @@ class ChessBoard
     new_board
   end
 
+  def place!(start, final)
+    raise BadMoveError if self[start].nil?
+    piece = self[start]
+
+    self[final] = piece
+    piece.move(final)
+
+    self[start] = nil
+  end
+
   def update!(positions)
     positions.each do |pos|
       self[pos] = "*"
@@ -166,12 +188,19 @@ end
 board1 = ChessBoard.new()
 p board1
 
+
+#debugger
 board1.move([0,3],[1,4])
 p board1
 
-
+#p board1.show_moves([1,4])
 board1.move([7,3], [6,4])
 #debugger
+p board1
+
+board1.place!([7,2],[3,2])
+
+board1.show_moves([3,2])
 p board1
 #board1.move([6,4],[7,3])
 #p board1

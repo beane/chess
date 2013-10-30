@@ -74,56 +74,99 @@ class SlidingPiece < Piece
   protected
     attr_reader :type
 
-    def vertical_moves(row, col, inc)
+    def find_neighbors(row_offset, col_offset, position)
+      row, col = position[0], position[1]
+      next_position = [row+row_offset, col+col_offset]
+
+      return find_neighbors(row_offset, col_offset, next_position) if position == pos
+      return [] if !(col).between?(0,7)
       return [] if !(row).between?(0,7)
-      return vertical_moves(row+inc, col, inc) if [row, col] == self.pos
 
-      if board[[row,col]]
-        return [] if board[[row,col]].color == self.color
-        return [[row,col]] if board[[row,col]] != self.color
-      else
-        vertical_moves(row+inc, col, inc) + [[row,col]]
+      if board[position]
+        return [] if board[position].color == self.color
+        return [position] if board[position].color != self.color
       end
+
+      [position] + find_neighbors(row_offset, col_offset, next_position)
+
     end
 
-    def horizontal_moves(row, col, inc)
-      if !(col).between?(0,7)
-        return []
-      elsif [row, col] == self.pos
-        horizontal_moves(row, col+inc, inc)
-      elsif board[[row,col]]
-        return [] if board[[row,col]].color == self.color
-        return [[row,col]] if board[[row,col]] != self.color
-      else
-        horizontal_moves(row, col+inc, inc) + [[row,col]]
-      end
-    end
-
-    def negative_diagonal_moves(row, col, inc)
-      if !(col).between?(0,7) || !(row).between?(0,7)
-        return []
-      elsif [row, col] == self.pos
-        negative_diagonal_moves(row+inc, col+inc, inc)
-      elsif board[[row,col]]
-        return [] if board[[row,col]].color == self.color
-        return [[row,col]] if board[[row,col]] != self.color
-      else
-        negative_diagonal_moves(row+inc, col+inc, inc) + [[row,col]]
-      end
-    end
-
-    def positive_diagonal_moves(row, col, inc)
-      if !(col).between?(0,7) || !(row).between?(0,7)
-        return []
-      elsif [row, col] == self.pos
-        positive_diagonal_moves(row-inc, col+inc, inc)
-      elsif board[[row,col]]
-        return [] if board[[row,col]].color == self.color
-        return [[row,col]] if board[[row,col]] != self.color
-      else
-        positive_diagonal_moves(row-inc, col+inc, inc) + [[row,col]]
-      end
-    end
+    # def vertical_moves(row, col, inc)
+    #   return [] if !(row).between?(0,7)
+    #   return vertical_moves(row+inc, col, inc) if [row, col] == self.pos
+    #
+    #   if board[[row,col]]
+    #     return [] if board[[row,col]].color == self.color
+    #     return [[row,col]] if board[[row,col]] != self.color
+    #   else
+    #     vertical_moves(row+inc, col, inc) + [[row,col]]
+    #   end
+    # end
+    #
+    # def horizontal_moves(row, col, inc)
+    #   if !(col).between?(0,7)
+    #     return []
+    #   elsif [row, col] == self.pos
+    #     horizontal_moves(row, col+inc, inc)
+    #   elsif board[[row,col]]
+    #     return [] if board[[row,col]].color == self.color
+    #     return [[row,col]] if board[[row,col]] != self.color
+    #   else
+    #     horizontal_moves(row, col+inc, inc) + [[row,col]]
+    #   end
+    # end
+    #
+    # def negative_diagonal_moves(row, col, inc)
+    #   if !(col).between?(0,7) || !(row).between?(0,7)
+    #     return []
+    #   elsif [row, col] == self.pos
+    #     negative_diagonal_moves(row+inc, col+inc, inc)
+    #   elsif board[[row,col]]
+    #     return [] if board[[row,col]].color == self.color
+    #     return [[row,col]] if board[[row,col]] != self.color
+    #   else
+    #     negative_diagonal_moves(row+inc, col+inc, inc) + [[row,col]]
+    #   end
+    # end
+    #
+    # def positive_diagonal_moves(row, col, inc)
+    #   if !(col).between?(0,7) || !(row).between?(0,7)
+    #     return []
+    #   elsif [row, col] == self.pos
+    #     positive_diagonal_moves(row-inc, col+inc, inc)
+    #   elsif board[[row,col]]
+    #     return [] if board[[row,col]].color == self.color
+    #     return [[row,col]] if board[[row,col]] != self.color
+    #   else
+    #     positive_diagonal_moves(row-inc, col+inc, inc) + [[row,col]]
+    #   end
+    # end
+    #
+    # def orthogonal_moves_orig()
+    #   row, col = pos
+    #
+    #   #debugger if self.class == Queen
+    #
+    #   orthogonal_moves = []
+    #   orthogonal_moves += vertical_moves(row, col, 1)
+    #   orthogonal_moves += vertical_moves(row, col, -1)
+    #   orthogonal_moves += horizontal_moves(row, col, 1)
+    #   orthogonal_moves += horizontal_moves(row, col, -1)
+    #
+    #   orthogonal_moves
+    # end
+    #
+    # def diagonal_moves_orig()
+    #   row, col = pos
+    #
+    #   diagonal_moves = []
+    #   diagonal_moves += positive_diagonal_moves(row, col, 1)
+    #   diagonal_moves += positive_diagonal_moves(row, col, -1)
+    #   diagonal_moves += negative_diagonal_moves(row, col, 1)
+    #   diagonal_moves += negative_diagonal_moves(row, col, -1)
+    #
+    #   diagonal_moves
+    # end
 
     def orthogonal_moves()
       row, col = pos
@@ -131,11 +174,17 @@ class SlidingPiece < Piece
       #debugger if self.class == Queen
 
       orthogonal_moves = []
-      orthogonal_moves += vertical_moves(row, col, 1)
-      orthogonal_moves += vertical_moves(row, col, -1)
-      orthogonal_moves += horizontal_moves(row, col, 1)
-      orthogonal_moves += horizontal_moves(row, col, -1)
+      puts "H ->"
+      orthogonal_moves += find_neighbors(0, 1, pos) #horizontal
+      puts "H <-"
+      orthogonal_moves += find_neighbors(0, -1, pos) #horizontal
+      puts "V down"
+      orthogonal_moves += find_neighbors(1, 0, pos) #vertical
+      puts "v up"
+      orthogonal_moves += find_neighbors(-1, 0, pos) #vertical
+      puts "----------------"
 
+      orthogonal_moves.delete(pos)
       orthogonal_moves
     end
 
@@ -143,13 +192,15 @@ class SlidingPiece < Piece
       row, col = pos
 
       diagonal_moves = []
-      diagonal_moves += positive_diagonal_moves(row, col, 1)
-      diagonal_moves += positive_diagonal_moves(row, col, -1)
-      diagonal_moves += negative_diagonal_moves(row, col, 1)
-      diagonal_moves += negative_diagonal_moves(row, col, -1)
+      diagonal_moves += find_neighbors(1, 1, pos) #neg diagonal
+      diagonal_moves += find_neighbors(-1, -1, pos) #pos diagonal
+      diagonal_moves += find_neighbors(1, -1, pos) #neg diagonal
+      diagonal_moves += find_neighbors(-1, 1, pos) #pos diagonal
 
       diagonal_moves
     end
+
+
 end
 
 class SteppingPiece < Piece
