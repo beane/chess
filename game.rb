@@ -92,9 +92,9 @@ end
 
 if $PROGRAM_NAME == __FILE__
   game = Game.new
-  game.chess_board.add_piece(King.new([0,7],game.chess_board,:white))
-  game.chess_board.add_piece(Queen.new([1,6],game.chess_board,:black))
-  game.chess_board.add_piece(King.new([1,5],game.chess_board,:black))
+  game.chess_board.add_piece(Pawn.new([6,0], game.chess_board, :white))
+  game.chess_board.add_piece(King.new([1,1], game.chess_board, :white))
+  game.chess_board.add_piece(King.new([1,4],game.chess_board,:black))
   #game.chess_board.add_piece(Rook.new([1,4],game.chess_board,:white))
   game.play_game
 

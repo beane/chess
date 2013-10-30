@@ -185,6 +185,17 @@ class Pawn < Piece
     @first_move
   end
 
+  def move(final)
+    super(final)
+
+    @first_move = false
+    row, col = self.pos
+
+    if row == 0 || row == 7
+      self.board.promote_pawn(self.color, self.pos)
+    end
+  end
+
   def forward_positions
     deltas_to_check = [[self.direction, 0]]
 
@@ -231,10 +242,7 @@ class Pawn < Piece
     moves_ahead + moves_diag
   end
 
-  def move(end_position)
-    super(end_position)
-    @first_move = false
-  end
+
 
   def to_s
     self.color == :white ? "P" : "p"

@@ -13,6 +13,10 @@ class Piece
     self.pos = end_position
   end
 
+  def move!(final)
+    self.pos = final
+  end
+
   def move_into_check?(final)
     temp_board = self.board.dup
     temp_board.move!(self.pos, final)

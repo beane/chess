@@ -102,7 +102,6 @@ class ChessBoard
   end
 
   def game_over?(color)
-
     if checkmate?(color)
       puts "Checkmate! Game over."
       return true
@@ -138,6 +137,7 @@ class ChessBoard
     raise MoveIntoCheckError if piece.move_into_check?(final)
 
     self[final] = piece
+
     piece.move(final)
 
     # if piece is king?
@@ -148,14 +148,41 @@ class ChessBoard
     self[start] = nil
   end
 
+  def promote_pawn(color, pos)
+    klass = pawn_prompt
+    debugger
+    self[pos] = klass.new(pos, self, color)
+  end
+
+  def pawn_prompt
+    begin
+      printf "Your pawn has reached the edge! \n Pick a piece to promote it to: "
+      piece = gets.chomp.downcase
+
+      case piece # returns a class
+      when "queen"
+        Queen
+      when "rook"
+        Rook
+      when "knight"
+        Knight
+      when "bishop"
+        Bishop
+      end
+    rescue
+      puts "Try again!"
+      retry
+    end
+  end
+
   def move!(start, final)
-    piece = self[start]
+    piece = self[start].dup(self)
 
     self[final] = piece
-    piece.move(final)
+    self[start] = nil
+    piece.move!(final)
 
     #puts "#{piece} moved to #{final}"
-    self[start] = nil
   end
 
   def dup
