@@ -7,8 +7,8 @@ class Game
 
   def initialize
     @chess_board = ChessBoard.new
-    @white_player = choose_player(:white)
-    @black_player = choose_player(:black)
+    @white_player = HumanPlayer.new(:white) # choose_player(:white)
+    @black_player = HumanPlayer.new(:black) # choose_player(:black)
     @current_player = self.white_player # [white, black]
     #chess_board.start_game
   end
