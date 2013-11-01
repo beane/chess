@@ -56,6 +56,23 @@ class Game
 
 
   def play_game
+    
+    system('clear')
+    
+    puts "Welcome to chess!"
+    puts "Enter your moves in the following format: 'e2,e4'."
+    puts
+    puts "Unfortunately, this game doesn't handle en passant,"
+    puts "draws by repetition, or draws by agreement."
+    puts
+    puts "You can quit at any time by pressing 'q' and the"
+    puts "Enter key."
+    puts
+    puts "White is on top."
+    puts
+    puts "Thanks for playing!"
+    puts
+    
     loop do
       begin
         game_turn
@@ -92,11 +109,6 @@ end
 
 if $PROGRAM_NAME == __FILE__
   game = Game.new
-  game.chess_board.add_piece(Pawn.new([6,0], game.chess_board, :white))
-  game.chess_board.add_piece(King.new([1,1], game.chess_board, :white))
-  game.chess_board.add_piece(King.new([1,4],game.chess_board,:black))
   #game.chess_board.add_piece(Rook.new([1,4],game.chess_board,:white))
   game.play_game
-
-
 end

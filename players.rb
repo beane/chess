@@ -39,10 +39,11 @@ class HumanPlayer < Player
 
   def get_move
     begin
+      puts "#{self.color.capitalize}'s Turn"
       printf "Type in your move, #{self.color} (start,end): "
-      str_input = gets.downcase.chomp.split(",")
+      str_input = gets.downcase.chomp.split(",").map(&:strip)
 
-      row1, col1 = str_input[0].split('')
+      row1, col1 = str_input[0].strip.split('')
 
       raise QuitGame if str_input[0] == "q"
       return [format_position([row1, col1])] if str_input.size == 1

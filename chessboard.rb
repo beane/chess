@@ -7,6 +7,8 @@ class ChessBoard
 
   def initialize
     @board = (0...8).map { (0...8).map { nil } }
+    setup(:white)
+    setup(:black)
   end
 
   def pieces(color)
@@ -212,11 +214,6 @@ class ChessBoard
     positions.each do |pos|
       self[pos] = "*"
     end
-  end
-
-  def start_game
-    setup(:white)
-    setup(:black)
   end
 
   def to_s
