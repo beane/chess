@@ -21,6 +21,7 @@ You can show your legal moves (including, because of a bug, the ones that move y
 
 You can quit by typing 'q' in the terminal, or by holding control + c in traditional programmer style.
 
-##ASCII
-
-One day, I may use pretty unicode pictures and the colorize gem to prettify the output. Until that day, you may suffer my ASCII art.
+##To do
+  - jazz up UI with colorize and unicode
+  - en passant
+  - pawn promotion
