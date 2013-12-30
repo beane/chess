@@ -142,11 +142,6 @@ class ChessBoard
 
     piece.move(final)
 
-    # if piece is king?
-    #   if piece is (kingside) castling?
-    #       (castling info is the king piece's responsibility)
-    #   move the correct rook (Rook#castle)
-
     self[start] = nil
   end
 
@@ -183,16 +178,10 @@ class ChessBoard
     self[final] = piece
     self[start] = nil
     piece.move!(final)
-
-    #puts "#{piece} moved to #{final}"
   end
 
   def dup
     new_board = ChessBoard.new
-
-    # (pieces(:white) + pieces(:black)).each do |piece|
-    #   piece.dup(new_board)
-    # end
 
     board.each_with_index do |row, index_r|
       new_row = []

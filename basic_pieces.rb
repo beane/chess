@@ -217,11 +217,6 @@ class Pawn < Piece
     forward_positions.each do |pos|
 
       self.board[pos].nil? ? ahead << pos : break
-      # if self.board[pos].nil?
-      #   ahead << pos
-      # else
-      #   break
-      # end
     end
 
     ahead
